@@ -1,34 +1,51 @@
 {
+  "name": "TusmerFree",
+  "displayName": "TusmerFree",
   "expo": {
     "name": "TusmerFree",
     "slug": "TusmerFree",
-    "version": "1.0.0",
+    "scheme": "com.tusmerfree",
+    "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/images/splash.png",
-      "resizeMode": "cover",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "jsEngine": "hermes",
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
+      "package": "com.TusmerFree",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FFFFFF"
       },
-      "package": "com.iys.TusmerFree"
+      "versionCode": 2
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.TusmerFree",
+      "requireFullScreen": true,
+      "buildNumber": "1.1.1"
     },
     "web": {
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/app-icon-web-favicon.png",
+      "splash": {
+        "image": "./assets/images/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#FFFFFF"
+      }
     },
     "extra": {
-
+      "eas": {
+        "projectId": "2e256565-cd0b-4e23-a679-62df1695792a"
+      }
     }
   }
 }
