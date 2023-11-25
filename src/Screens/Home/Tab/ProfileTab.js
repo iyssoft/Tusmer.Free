@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useContext } from "react";
 import { useTheme } from '@react-navigation/native';
-import { View, Text, TouchableOpacity, Image, Modal, ScrollView,KeyboardAvoidingView } from "react-native";
+import { View, Text, TouchableOpacity, Image, Modal, ScrollView,KeyboardAvoidingView,Dimensions } from "react-native";
 import { ProfileTabStyles, Style, CongratulationStyle } from '../../../style';
 import { Button, Spacing, Input, VectorIcons, ConfirmationAlert, Container } from '../../../Components';
 import { SH, SF } from '../../../Utiles';
@@ -22,7 +22,8 @@ const ProfileTab = (props) => {
   const ProfileTabStyle = useMemo(() => ProfileTabStyles(Colors), [Colors]);
   const authCtx= useContext(AuthContext);
   const CongratulationStyles = useMemo(() => CongratulationStyle(Colors), [Colors]);
-
+  const dimensions = Dimensions.get('window');
+  const imageWidth = dimensions.width;
   const stateArray = {
     Oldpassword: "",
     Newpassword: "",
@@ -368,13 +369,16 @@ else{
                     <View style={CongratulationStyles.minflexview}>
                         <View style={CongratulationStyles.minviewsigninscreen}>
                             <View style={CongratulationStyles.succefullimgviewtwo}>
-                                <Image style={CongratulationStyles.succefullyimg} resizeMode="contain" source={images.User_Images} />
+                                <Image style={{ height: imageWidth-50, width: imageWidth-50 }} resizeMode="contain" source={{uri:"https://api.tusmer.com/images/mobile/free/tusmer_bdv_user_register.jpeg"}} />
                             </View>
-                            <Spacing space={SH(50)} />
-                            <Text style={CongratulationStyles.accounttext}>Yetkiniz Yok</Text>
-                            <Spacing space={SH(30)} />
-                            <Text style={CongratulationStyles.accounttextsuccessfully}>Bu alandan sadece kayıtlı kullanıcılar faydalanabilir. Hızlı bir şekilde üye olabilir yada giriş yapabilirsiniz.</Text>
-                            <Spacing space={SH(50)} />
+                            <Spacing space={SH(10)} />
+                            <Text style={CongratulationStyles.accounttext}>TUSMER’İN BEDAVA DÜNYASINA HOŞ GELDİNİZ.</Text>
+                            <Spacing space={SH(10)} />
+                            <Text style={CongratulationStyles.accounttextsuccessfully}>Lütfen ÜCRETSİZ hesap aktivasyonunuzu yapın.</Text>
+                            <Text style={CongratulationStyles.accounttextsuccessfully}>* İhtiyacınız olan bi dolu dersi TAMAMEN BEDAVA izleyin.</Text>
+                            <Text style={CongratulationStyles.accounttextsuccessfully}>* Yapılacak tüm çekilişlere otomatik katılma hakkı elde edin.</Text>
+                            <Text style={CongratulationStyles.accounttextsuccessfully}>* Yenilenen ve güncellenen eğitimlerimizden haberdar olun.</Text>
+                            <Spacing space={SH(10)} />
                             <View style={CongratulationStyles.accountbutton}>
                                 <Button title={"Giriş Yap"}
                                     onPress={() => navigation.navigate(RouteName.LOGIN_SCREEN)}

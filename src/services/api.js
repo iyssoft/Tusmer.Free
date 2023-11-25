@@ -10,6 +10,9 @@ const UniversitiesEndPoint = "/user/GetUniversities";
 const Login= "/user/LoginForTusmerFree";
 const Categories="/lecture/gettusmerfreelecturegroups";
 const Topic= "/api-frontend/Topic/GetTopicDetailsBySystemName/";
+const Settings="/user/GetSettings";
+const SendSmsForForgetPassword="/user/sendSmsForForgetPassword";
+const BecomeDelegate="/user/becomeDelegate";
 let _token= "";
 
 export async function getToken(username, password)
@@ -49,7 +52,7 @@ export async function userLogin(username, password)
 export async function userRegister(credentials)
 {
     console.log("userRegister");
-    let {emailId, mobileNumber, password, firstName, lastName, customerRoleId, university, studentClass}= credentials;
+    let {emailId, mobileNumber, password, firstName, lastName, customerRoleId, university, studentClass,departmentId}= credentials;
     emailId= emailId.trim();
     password = password.trim();
     if(_token.length == 0)
@@ -68,6 +71,24 @@ export async function userRegister(credentials)
                  "firstName":firstName,
                  "lastName":lastName,
                  "customerRoleId":customerRoleId,
+                 "universityId": university,
+                 "schoolTermId": studentClass,
+                 "departmentId": departmentId
+            }
+            );
+    
+}
+
+export async function becomeDelegate(credentials)
+{
+    console.log("userRegister");
+    let {name_surname, mobileNumber, message, university, studentClass}= credentials;
+        const response= await axios.post(
+            Base_Url2+BecomeDelegate,
+            {
+                "nameSurname": name_surname,
+                "phone": mobileNumber,
+                 "message":message,
                  "universityId": university,
                  "schoolTermId": studentClass
             }
@@ -135,4 +156,25 @@ export async function getTopic(systemName)
         Base_Url+Topic+systemName,config
     );
     return response.data;
+}
+
+export async function getSettings()
+{
+    const response= await axios.post(
+        Base_Url2+Settings
+        );
+        console.log(response);
+    const result = response.data;
+    return result; 
+}
+
+export async function sendSmsForForgetPassword(phone)
+{
+    const response= await axios.post(
+        Base_Url2+SendSmsForForgetPassword,{
+            "phoneNumber": phone,
+        }
+        );
+        console.log(response);
+
 }

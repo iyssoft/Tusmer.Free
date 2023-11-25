@@ -3,8 +3,9 @@ import { Colors, Fonts, SH, SW, SF } from '../../Utiles';
 
 export default StyleSheet.create({
   customslidebarmenu: {
-    paddingHorizontal: SH(20),
+    paddingHorizontal: SH(10),
     paddingTop: SH(10),
+    paddingEnd:SH(20),
   },
   setheightview: {
     height: '100%',
@@ -14,7 +15,7 @@ export default StyleSheet.create({
     color: Colors.black_text_color,
     fontSize: SF(18),
     fontFamily: Fonts.Poppins_Medium,
-    paddingLeft: SH(20),
+    paddingLeft: SH(10),
     opacity: 0.7,
   },
   flexrowset: {

@@ -1,28 +1,44 @@
 import React, { useState, useMemo } from "react";
 import { useTheme } from '@react-navigation/native';
-import { Text, View, ScrollView, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView, TouchableOpacity,ActivityIndicator } from "react-native";
 import { Login, Style } from '../../../style';
 import IconM from 'react-native-vector-icons/MaterialIcons';
 import { Button, ConfirmationAlert, Spacing, AppHeader, Input, Container, } from '../../../Components';
 import { SH, SF } from '../../../Utiles';
 import { useTranslation } from "react-i18next";
 import { RouteName } from "../../../routes";
-
+import { sendSmsForForgetPassword } from "../../../services/api";
 const ForgotPassword = (props) => {
   const { t } = useTranslation();
   const { navigation } = props;
   const [email, setEmailValidError] = useState('');
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  
+  const [isLoading, setIsLoading] = useState(false);
   const { Colors } = useTheme();
   const Logins = useMemo(() => Login(Colors), [Colors]);
 
   var alertdata = {
-    'logout': t("Email_Successfull"),
+    'logout': t("Kayıtlı telefonunuza SMS gönderildi"),
   }
   const onoknutton = () => {
     navigation.navigate(RouteName.LOGIN_SCREEN)
+  }
+  async function sendSms(){
+    try{
+      setIsLoading(true);
+      console.log(email);
+      await sendSmsForForgetPassword(email)
+      setIsLoading(false);
+      setAlertVisible(true);
+      setAlertMessage(alertdata.logout);
+
+  }catch(error)
+  {
+    console.log(error);
+      console.log(error.response.data.Message);
+      //Alert.alert(error.response.data)
+  }
   }
   return (
     <Container>
@@ -37,22 +53,29 @@ const ForgotPassword = (props) => {
                 <View style={Logins.BorderWidth}>
                   <TouchableOpacity style={Logins.WidthSet}>
                     <Input
-                      placeholder={t("Enter_Email")}
+                      placeholder={t("Telefon numaranızı giriniz")}
                       inputStyle={Logins.SearchInputBorder}
                       onChangeText={(e) => setEmailValidError(e)}
-                      keyboardType={'email-address'}
+                      keyboardType={'numeric'}
                       value={email}
-                      leftIcon={<IconM style={Logins.Marginright} name="email" size={SF(25)} />}
+                      maxLength={10}
+                      leftIcon={<IconM style={Logins.Marginright} name="phone" size={SF(25)} />}
                     />
                   </TouchableOpacity>
                 </View>
                 <Spacing space={SH(20)} />
                 <Text style={Logins.SeTextStyleForget}><Text style={Logins.StarColor}> * </Text> {t("We_Well_Sand_Message")}</Text>
                 <Spacing space={SH(20)} />
-                <Button onPress={() => {
-                  setAlertVisible(true);
-                  setAlertMessage(alertdata.logout);
-                }} title={t("Submit_button")} />
+                {isLoading ? (<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                            <ActivityIndicator  color="#46c1bd" />   
+                                    </View>) : (
+                                        <View>
+                                        <Button onPress={() => {
+                                          sendSms();
+                                          
+                                        }} title={t("Şifremi Gönder")} />
+                                    </View>
+                                    )}
                 <ConfirmationAlert
                   message={alertMessage}
                   buttonminview={Logins.CenterButton}
@@ -61,7 +84,7 @@ const ForgotPassword = (props) => {
                   onPressCancel={() => setAlertVisible(!alertVisible)}
                   onPress={() => { setAlertVisible(!alertVisible), onoknutton() }}
                   iconVisible={true}
-                  buttonText={t("Ok_Text")}
+                  buttonText={t("Tamam")}
                 />
               </View>
             </View>

@@ -6,7 +6,7 @@ import { RouteName, SideNavigator } from '../routes';
 import { useSelector } from "react-redux";
 
 import {
-  SplashScreen, Swiperscreen, LoginScreen, RegisterScreen,
+  SplashScreen, Swiperscreen,
   ForgotPassword, OtpVeryfiveScreen, RegistrationSuccessful,
   SelectExamScreen, ExamQustionScreen,
   Downloadcertyficate, ExamMarkSheetNumberScreen, CoursesScreen, CategoriesScreen,
@@ -20,7 +20,8 @@ import {
   TranslationScreen,
   Checkoutscreen,
   ReviewsScreen,
-  TopicScreen
+  TopicScreen,
+  DelegateScreen
 } from '../Screens';
 import { AppHeader, ColorPicker } from '../Components';
 import { Colors } from '../Utiles';
@@ -54,13 +55,12 @@ const App = (props) => {
   return (
     <NavigationContainer theme={colorValue}>
       <AuthenticatedStack props={props}/>
-      {/* {!authCtx.isAuthenticated && <AuthStack HeaderArray={HeaderArray}/>}
-      {authCtx.isAuthenticated && <AuthenticatedStack props={props}/>} */}
     </NavigationContainer>
   );
 };
 
 function AuthenticatedStack(HeaderArray,props){
+  const authCtx= useContext(AuthContext);
   return(
 <Stack.Navigator>
         {/* <Stack.Screen
@@ -112,6 +112,11 @@ function AuthenticatedStack(HeaderArray,props){
           options={{ headerShown: true,headerBackTitle:"Geri",title:"" }}
         />
         <Stack.Screen
+          name={RouteName.DELEGATE_SCREEN}
+          component={DelegateScreen}
+          options={{ headerShown: true,headerBackTitle:"Geri",title:"" }}
+        />
+        <Stack.Screen
           name={RouteName.CATEGORIES_SCREEN}
           component={CategoriesScreen}
           options={{
@@ -138,16 +143,7 @@ function AuthenticatedStack(HeaderArray,props){
           component={WatchTrailerScreen}
           options={{ headerShown: true ,headerBackTitle:"Geri",title:"" }}
         />
-        <Stack.Screen
-          name={RouteName.LOGIN_SCREEN}
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={RouteName.REGISTER_SCREEN}
-          component={RegisterScreen}
-          options={{ title: null, headerShown: false, }}
-        />
+       
         {/* <Stack.Screen
           name={RouteName.COURSES_DETAILS_SCREEN}
           component={CoursesDetailesScreen}
@@ -233,48 +229,6 @@ function AuthenticatedStack(HeaderArray,props){
   );
 }
 
-function AuthStack(){
-  return(
-    <Stack.Navigator>
-      <Stack.Screen
-          name={RouteName.LOGIN_SCREEN}
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        {/* <Stack.Screen
-          name={RouteName.SPLASH_SCREEN}
-          component={SplashScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={RouteName.SWIPER_SCREEN}
-          component={Swiperscreen}
-          options={{ headerShown: false }}
-        /> */}
-        <Stack.Screen
-          name={RouteName.REGISTER_SCREEN}
-          component={RegisterScreen}
-          options={{ title: null, headerShown: false, }}
-        />
-        {/* <Stack.Screen
-          name={RouteName.OTP_SCREEN}
-          component={OtpVeryfiveScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={RouteName.REGISTER_SUCCESSFULLY}
-          component={RegistrationSuccessful}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={RouteName.FORGET_PASSWORD_SCREEN}
-          component={ForgotPassword}
-          options={{
-            headerShown: false,
-          }}
-        /> */}
-    </Stack.Navigator>
-  );
-}
+
 export default App;
 

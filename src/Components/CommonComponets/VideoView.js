@@ -1,23 +1,36 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext,useEffect } from 'react';
 import { StyleSheet, View, Platform, Dimensions } from 'react-native';
 import MediaControls, { PLAYER_STATES } from 'react-native-media-controls';
 import Video from 'react-native-video';
 //import { Video, ResizeMode } from 'expo-av';
 // import Orientation from 'react-native-orientation-locker';
 import * as ScreenOrientation from 'expo-screen-orientation';
-
+import { ConfirmationAlert } from '../../Components';
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
+import { AuthContext } from '../../store/auth-context';
 
 const VideoPlayer = (props) => {
+    const authCtx= useContext(AuthContext);
     const videoPlayer = useRef(null);
     const [duration, setDuration] = useState(0);
     const [paused, setPaused] = useState(props.paused);
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("Demo kullanım süresi doldu." );
 
     const [currentTime, setCurrentTime] = useState(0);
     const [playerState, setPlayerState] = useState(props.paused ? PLAYER_STATES.PAUSED :PLAYER_STATES.PLAYING);
     const [isLoading, setIsLoading] = useState(true);
-
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener("blur", async (e) => {
+          console.log("useEffect çalışıyor");
+          setPaused(true);
+          setPlayerState(PLAYER_STATES.PAUSED);
+         })
+     
+     // Unsubscribe to event listener when component unmount
+     return unsubscribe;   
+      }, [props.navigation])
     const onSeek = (seek) => {
         videoPlayer?.current.seek(seek);
     };
@@ -41,10 +54,22 @@ const VideoPlayer = (props) => {
     const onProgress = (data) => {
         if (!isLoading) {
             setCurrentTime(data.currentTime);
+            if(props.demoSeconds > 0){
+                if(data.currentTime >= props.demoSeconds){
+                    setAlertVisible(true);
+                    setPaused(true);
+                }
+            }
+            
         }
     };
     const onLoad = (data) => {
-        setDuration(Math.round(data.duration));
+        if(props.demoSeconds > 0){
+            setDuration(props.demoSeconds);
+        }
+        else{
+            setDuration(Math.round(data.duration));
+        }
         setIsLoading(false);
     };
 
@@ -56,7 +81,7 @@ const VideoPlayer = (props) => {
     const [isFullScreen, setIsFullScreen] = useState(false);
     const onFullScreen = () => {
         if (!isFullScreen) {
-            //changeScreenOrientation_LANDSCAPE_LEFT();
+            changeScreenOrientation_LANDSCAPE_LEFT();
         } else {
             if (Platform.OS === 'ios') {
                 changeScreenOrientation_Default();
@@ -73,9 +98,13 @@ const VideoPlayer = (props) => {
         
     };
     async function changeScreenOrientation_LANDSCAPE_LEFT() {
+        authCtx.setFullScreen(true);
+        //props.navigation.headerShown= false;
         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
       }
       async function changeScreenOrientation_Default() {
+        authCtx.setFullScreen(false);
+        //props.navigation.headerShown= true;
         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
       }
     return (
@@ -111,6 +140,15 @@ const VideoPlayer = (props) => {
                 style={isFullScreen ? styles.backgroundVideoFullScreen : styles.backgroundVideo}
                 sliderStyle={isFullScreen ? { containerStyle: styles.mediaControls, thumbStyle: {}, trackStyle: {} } : { containerStyle: {}, thumbStyle: {}, trackStyle: {} }}
             />
+            <ConfirmationAlert
+                message={alertMessage}
+                modalVisible={alertVisible}
+                setModalVisible={setAlertVisible}
+                onPressCancel={() => setAlertVisible(!alertVisible)}
+                onPress={() => setAlertVisible(!alertVisible)}
+                cancelButtonText={"Kapat"}
+                buttonText={"Tamam"}
+              />
         </View>
 
     );

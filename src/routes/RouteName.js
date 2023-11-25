@@ -40,8 +40,8 @@ const RouteName = {
     SETTINGS_SCREEN: "SettingsScreen",
     NOTIFICATION_SCREEN: "NotificationScreen",
     SEARCH_POPULARTAG_SCREEN: "SearchPopularTagScreen",
-    TOPIC_SCREEN: "TopicScreen"
-
+    TOPIC_SCREEN: "TopicScreen",
+    DELEGATE_SCREEN: "DelegateScreen"
 
 }
 export default RouteName;

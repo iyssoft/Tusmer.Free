@@ -140,7 +140,7 @@ export default StyleSheet.create({
   },
   buttonminview: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     paddingHorizontal: SH(40),
     paddingTop: SH(20),
   },

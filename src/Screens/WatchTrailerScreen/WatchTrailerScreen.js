@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useTheme } from '@react-navigation/native';
 import { View, Text, StatusBar, TouchableOpacity } from "react-native";
 import ReactNativeParallaxHeader from "react-native-parallax-header";
@@ -15,16 +15,18 @@ const WatchTrailerScreen = (props) => {
   const { Colors } = useTheme();
   const WatchTrailerStyles = useMemo(() => WatchTrailerStyle(Colors), [Colors]);
   const [videoUrl, setVideoUrl]= useState("");
+  const [demoSeconds, setDemoSecconds]= useState(0);
   const [paused, setPaused]= useState(false);
-  const changeVideoUrl=(link) =>{
+
+  const changeVideoUrl=(link, demoSecond) =>{
     setVideoUrl(link);
-    console.log("videoUrl");
+    setDemoSecconds(demoSecond);
   }
 
     const title = () => {
     return (
       <View style={WatchTrailerStyles.nindivset}>
-        <VideoView videoUrl={videoUrl} paused={paused}/>
+        <VideoView videoUrl={videoUrl} paused={paused} demoSeconds={demoSeconds} navigation={navigation}/>
       </View>
     );c
   }

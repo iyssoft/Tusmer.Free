@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { View, ScrollView, KeyboardAvoidingView, FlatList, Text, TouchableOpacity } from "react-native";
+import React, { useMemo,useEffect,useState, useContext } from 'react';
+import { View, ScrollView, KeyboardAvoidingView, useWindowDimensions, Text, TouchableOpacity } from "react-native";
 import { HomeStyles, Style } from '../../../style';
 import { HomeImageData, SH, NewCoursesData, PopularCoursesData, InstructorData } from '../../../Utiles';
 import { Container } from '../../../Components';
@@ -8,14 +8,52 @@ import { HomeSmallImageView, Spacing, PopularCoursesView, InstructorView, HomeCa
 import { useTranslation } from "react-i18next";
 import { RouteName } from "../../../routes";
 import { useTheme } from '@react-navigation/native';
-import {HomePageRoundedSliderData, HomePagePopularCoursesSliderData, HomePageNewCoursesSliderData, HomePageInstructorsSliderData} from '../../../services/datas';
+import { getTopic,getSettings } from "../../../services/api";
+//import {HomePageRoundedSliderData, HomePagePopularCoursesSliderData, HomePageNewCoursesSliderData, HomePageInstructorsSliderData} from '../../../services/datas';
+import RenderHtml from 'react-native-render-html';
+import { AuthContext } from '../../../store/auth-context';
 
 const HomeTab = (props) => {
   const { t } = useTranslation();
+  const[content, setContent]= useState("");
+  const authCtx= useContext(AuthContext);
   const { navigation } = props;
   const { Colors } = useTheme();
   const HomeStyle = useMemo(() => HomeStyles(Colors), [Colors]);
+  const { width } = useWindowDimensions();
+  async function getData() {
+    try{
+      topicSystemName="free-home"
+      const result=  await getTopic(topicSystemName);
+      setContent( {html: result.body});
+    }catch(error)
+    {
+      console.log("error");
+      console.log(error);
+    }
+  }
 
+  async function getSetting(){
+    try{
+      const result=  await getSettings();
+      console.log(result);
+      if(result.data.noRegistration){
+        authCtx.setRegistrationRequired(false);
+      }
+      else{
+        authCtx.setRegistrationRequired(true);
+      }
+    }catch(error)
+    {
+      console.log("error");
+      console.log(error);
+    }
+    
+  }
+  useEffect(() => {
+    getSetting();
+      getData();      
+    }, []);
   return (
     <>
       <Container>
@@ -36,19 +74,10 @@ const HomeTab = (props) => {
                       <Text style={HomeStyle.popularcourcetexttwoColor1}>
                       HOŞGELDİNİZ
                       </Text>
-                      <Text style={HomeStyle.popularcourcetexttwoFont16}>
-                      Tıp öğrencileri için;
-                      </Text>
-                      <Text style={HomeStyle.popularcourcetexttwoFont16}>
-                      * ÜCRETSİZ bilgileri içeren
-                      </Text>
-                      <Text style={HomeStyle.popularcourcetexttwoFont16}>
-                      * Tıp öğrencilerinin bilgi ve başarı seviyelerini yükseltmeyi hedefleyen öğrenci dostu bir bilgi 
-                      paylaşım platformudur.
-                      </Text>
-                      <Text style={HomeStyle.popularcourcetexttwoColor2}>
-                      UYGULAMAMIZ ÜCRETSİZ OLACAK VE ÜCRETSİZ KALACAKTIR.
-                      </Text>
+                      <RenderHtml
+                    contentWidth={width}
+                    source={content}
+                    />
                     </TouchableOpacity>
                     <Spacing space={SH(10)} />
 

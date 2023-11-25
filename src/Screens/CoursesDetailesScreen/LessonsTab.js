@@ -26,7 +26,7 @@ const LessonsTab = (props) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          "UserId": authCtx.token.id,
+          "UserId": authCtx.isRegistrationRequired ? authCtx.token.id :19858,
           "GroupId": groupId,
         })
       }
@@ -57,7 +57,7 @@ const LessonsTab = (props) => {
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => (<LessonsTabViews
               item={item}
-              onPress={() => onPress(item.link)}
+              onPress={() => onPress(item.link, item.demoSeconds)}
             />)}
             keyExtractor={item => item.id}
           />

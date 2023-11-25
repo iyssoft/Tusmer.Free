@@ -20,7 +20,7 @@ export default ReviewsStyle = (Colors) => StyleSheet.create({
   AccountTextTwo: {
     color: Colors.black_text_color,
     fontSize: SF(23),
-    fontFamily: Fonts.Poppins_Medium,
+    fontFamily: Fonts.Poppins_Bold,
     textAlign: 'center'
   },
   FlexRowStarSignup: {

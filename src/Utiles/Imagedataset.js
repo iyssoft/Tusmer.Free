@@ -72,6 +72,11 @@ export const UniversityDropdownData = [
   { title: "Uni C", id: 10 },
   { title: "Uni D", id: 11 },
 ];
+export const departmentData = [
+  { title: "Dahiliye Yandal", id: 1 },
+  { title: "Pediyatri Yandal Doktor", id: 5 },
+  { title: "Kadın Doğum Yandal", id: 10 }
+];
 export const StudentClassDropdownData = [
   { title: "1 Sınıf", id: 1 },
   { title: "2. Sınıf", id: 2 },

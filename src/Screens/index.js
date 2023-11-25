@@ -23,4 +23,5 @@ export * from './EndCallScreen';
 export * from './SettingsScreen';
 export * from './NotificationScreen';
 export * from './OnlineClassScreen';
-export * from "./Topic"
+export * from "./Topic";
+export * from "./DelegateScreen";

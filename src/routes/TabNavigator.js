@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ExamTab, HomeTab, MyCourseTab, ProfileTab, WishlistTab, CategoriesScreen, WatchTrailerScreen, TopicScreen } from '../Screens';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -9,6 +9,7 @@ import { RouteName } from '../routes';
 import { Colors, SH, SF } from '../Utiles';
 import { useTranslation } from "react-i18next";
 import { View, TouchableOpacity } from 'react-native';
+import { AuthContext } from '../store/auth-context';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -107,6 +108,7 @@ function HomeTabScreenStack(props) {
 function MyCourseTabScreenStack(props) {
   const { t } = useTranslation();
   const { navigation } = props;
+  const authCtx= useContext(AuthContext);
   return (
     <Stack.Navigator initialRouteName="MyCourseTab">
       <Stack.Screen
@@ -132,7 +134,16 @@ function MyCourseTabScreenStack(props) {
         options={{
           tabBarVisible:false,
           headerTitle: (props) => <AppHeader rightView={Style.RemoveBgColor} {...props} headerTitle={""} />,
-          ...HeaderArray,
+          headerShown: authCtx.isVideoFullScreen ? false : true,
+          headerBackTitle:"Geri",
+          headerTintColor: Colors.theme_backgound,
+          headerShadowVisible: false,
+          headerStyle: {backgroundColor: Colors.lavender_blush_colors,},
+          headerTitleStyle: {
+            color: Colors.theme_backgound,
+            fontWeight: "700",
+            fontSize: SF(22),
+          },
           // headerLeft: () => (
           //   <HeaderLeftMenuIcon {...props} />
           // )
@@ -206,9 +217,10 @@ function ProfileScreenStack(props) {
 }
 export function HomeScsreenTabAll() {
   const { t } = useTranslation();
+  const authCtx= useContext(AuthContext);
   return (
     <Tab.Navigator initialRouteName="Homes"
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ headerShown: false,tabBarStyle: { height: authCtx.isVideoFullScreen ? SH(0) : SH(60)} }}
       tabBarOptions={{
         activeTintColor: Colors.theme_backgound,
         inactiveTintColor: Colors.gray_text_color,
@@ -237,21 +249,24 @@ export function HomeScsreenTabAll() {
           ),
         }}
       />
-      <Tab.Screen
-        name={RouteName.CATEGORIES_SCREEN}
-        component={MyCourseTabScreenStack}
-        options={{
-          tabBarLabel: t("Customesidebar_title_19"),
-          tabBarIcon: ({ focused }) => (
-            <VectorIcons
-              color={focused ? Colors.theme_backgound : Colors.gray_text_color}
-              name="copy1"
-              icon="AntDesign"
-              size={SF(20)}
-            />
-          ),
-        }}
-      />
+      {/* {!authCtx.isVideoFullScreen && */}
+            <Tab.Screen
+            name={RouteName.CATEGORIES_SCREEN}
+            component={MyCourseTabScreenStack}
+            options={{
+              tabBarLabel: t("Customesidebar_title_19"),
+              tabBarIcon: ({ focused }) => (
+                <VectorIcons
+                  color={focused ? Colors.theme_backgound : Colors.gray_text_color}
+                  name="copy1"
+                  icon="AntDesign"
+                  size={SF(20)}
+                />
+              ),
+            }}
+          />
+      {/* } */}
+
       {/* <Tab.Screen
         name={RouteName.EXAM_TAB}
         component={ExamTabScreenStack}
@@ -267,36 +282,7 @@ export function HomeScsreenTabAll() {
           ),
         }}
       /> */}
-      <Tab.Screen
-        name={RouteName.WHISHILIST_TAB}
-        component={WishlistTabScreenStack}
-        options={{
-          tabBarLabel: t("Customesidebar_title_21"),
-          tabBarIcon: ({ focused }) => (
-            <VectorIcons
-              color={focused ? Colors.theme_backgound : Colors.gray_text_color}
-              name="hearto"
-              icon="AntDesign"
-              size={SF(20)}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name={RouteName.PROFILE_TAB}
-        component={ProfileScreenStack}
-        options={{
-          tabBarLabel: t("Customesidebar_title_22"),
-          tabBarIcon: ({ focused }) => (
-            <VectorIcons
-              color={focused ? Colors.theme_backgound : Colors.gray_text_color}
-              name="user-circle"
-              icon="FontAwesome"
-              size={SF(20)}
-            />
-          ),
-        }}
-      />
+     
     </Tab.Navigator>
   )
 }
