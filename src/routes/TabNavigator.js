@@ -91,15 +91,35 @@ function HomeTabScreenStack(props) {
           // ),
         }}
       />
+      {/* <Stack.Screen
+            name={RouteName.CATEGORIES_SCREEN}
+            component={MyCourseTabScreenStack}
+            options={{
+              tabBarLabel: t("Customesidebar_title_19"),
+              tabBarIcon: ({ focused }) => (
+                <VectorIcons
+                  color={focused ? Colors.theme_backgound : Colors.gray_text_color}
+                  name="copy1"
+                  icon="AntDesign"
+                  size={SF(20)}
+                />
+              ),
+            }}
+          /> */}
+                <Stack.Screen
+        name={RouteName.CATEGORIES_SCREEN}
+        component={CategoriesScreen}
+        options={{
+          headerTitle: (props) => <AppHeader rightView={Style.RemoveBgColor} {...props} headerTitle={""} />,
+          ...HeaderArray,
+        }}
+      /> 
       <Stack.Screen
         name={RouteName.TOPIC_SCREEN}
         component={TopicScreen}
         options={{
           headerTitle: (props) => <AppHeader rightView={Style.RemoveBgColor} {...props} headerTitle={""} />,
           ...HeaderArray,
-          // headerLeft: () => (
-          //   <HeaderLeftMenuIcon {...props} />
-          // )
         }}
       /> 
     </Stack.Navigator>
@@ -219,7 +239,7 @@ export function HomeScsreenTabAll() {
   const { t } = useTranslation();
   const authCtx= useContext(AuthContext);
   return (
-    <Tab.Navigator initialRouteName="Homes"
+    <Stack.Navigator initialRouteName="Homes"
       screenOptions={{ headerShown: false,tabBarStyle: { height: authCtx.isVideoFullScreen ? SH(0) : SH(60)} }}
       tabBarOptions={{
         activeTintColor: Colors.theme_backgound,
@@ -231,10 +251,11 @@ export function HomeScsreenTabAll() {
           height: SH(49),
           backgroundColor: Colors.white_text_color,
           paddingTop: SH(0),
+          
         },
       }}
     >
-      <Tab.Screen
+      <Stack.Screen
         name={RouteName.HOME_TAB}
         component={HomeTabScreenStack}
         options={{
@@ -250,7 +271,7 @@ export function HomeScsreenTabAll() {
         }}
       />
       {/* {!authCtx.isVideoFullScreen && */}
-            <Tab.Screen
+            <Stack.Screen
             name={RouteName.CATEGORIES_SCREEN}
             component={MyCourseTabScreenStack}
             options={{
@@ -283,6 +304,6 @@ export function HomeScsreenTabAll() {
         }}
       /> */}
      
-    </Tab.Navigator>
+    </Stack.Navigator>
   )
 }

@@ -1,5 +1,5 @@
 import React, { useMemo,useEffect,useState, useContext } from 'react';
-import { View, ScrollView, KeyboardAvoidingView, useWindowDimensions, Text, TouchableOpacity } from "react-native";
+import { View, ScrollView, KeyboardAvoidingView, useWindowDimensions, Text, TouchableOpacity,StyleSheet, Image } from "react-native";
 import { HomeStyles, Style } from '../../../style';
 import { HomeImageData, SH, NewCoursesData, PopularCoursesData, InstructorData } from '../../../Utiles';
 import { Container } from '../../../Components';
@@ -12,7 +12,10 @@ import { getTopic,getSettings } from "../../../services/api";
 //import {HomePageRoundedSliderData, HomePagePopularCoursesSliderData, HomePageNewCoursesSliderData, HomePageInstructorsSliderData} from '../../../services/datas';
 import RenderHtml from 'react-native-render-html';
 import { AuthContext } from '../../../store/auth-context';
+import NestedListView, {NestedRow, INode} from 'react-native-nested-listview'
 
+const Base_Url2= "https://online.tusmer.com/api";
+const Categories="/lecture/gettusmerfreelecturegroups";
 const HomeTab = (props) => {
   const { t } = useTranslation();
   const[content, setContent]= useState("");
@@ -21,6 +24,86 @@ const HomeTab = (props) => {
   const { Colors } = useTheme();
   const HomeStyle = useMemo(() => HomeStyles(Colors), [Colors]);
   const { width } = useWindowDimensions();
+  const[courceData, setCourceData]= useState(null);
+  function getDataForCategories() {
+    fetch(
+      Base_Url2+Categories,
+      {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              "UserId": 19858
+          })
+      }
+  ).then(response => response.json())
+      .then(result => {
+        if(result.isSuccess)
+         {
+          console.log(result);
+            setCourceData(result.data);
+          }else{
+  
+          }
+      }).catch(function (error) {
+          console.log('There has been a problem with your fetch operation: ' + error.message);
+          // ADD THIS THROW error
+          throw error;
+      });
+      // try{
+      //   const result=  getCategories(authCtx.token.id);
+      //   console.log("--------------Data is here---------------------");
+      //   console.log(result);
+      //   if(result.isSuccess)
+      //   {
+      //     setCourceData(result.data);
+      //   }else{
+
+      //   }
+      // }catch(error)
+      // {
+      //   console.log("error")
+      //   console.log(error);
+      // }
+    }
+    function handleCategoryClick(catId){
+      let filteredValue = courceData.filter(key=>key.value=== catId)[0].items
+   
+      console.log(filteredValue);
+      navigation.navigate(RouteName.CATEGORIES_SCREEN,{courceData: filteredValue})
+    }
+    const renderNode = (node, level, isLastLevel) => {
+      const paddingLeft = (level-1) * 15;
+     
+      if(level == 1)
+      {
+        console.log(node.value);
+
+        return (
+          <View>
+            <View style={[styles.container, { paddingLeft }]}>
+              <LinearGradient
+                colors={[node.color1, node.color2]}
+                start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
+                style={styles.roundedContainer}>
+                <Image source={{uri:"https://online.tusmer.com"+node.icon}}  style={styles.image} />
+                <TouchableOpacity onPress={() => handleCategoryClick(node.value)}>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.text}>{node.name}</Text>
+                  </View>
+                </TouchableOpacity>
+                </LinearGradient>
+            </View>
+            <Spacing space={SH(10)} />
+          </View>
+        );
+      }
+    };
+  
+    const getChildrenName = (_) => {
+      return 'items';
+    };
   async function getData() {
     try{
       topicSystemName="free-home"
@@ -43,6 +126,13 @@ const HomeTab = (props) => {
       else{
         authCtx.setRegistrationRequired(true);
       }
+      if(result.data.hideMenu)
+      {
+        authCtx.setIsHideMenuItem(true);
+      }
+      else{
+        authCtx.setIsHideMenuItem(false);
+      }
     }catch(error)
     {
       console.log("error");
@@ -51,6 +141,7 @@ const HomeTab = (props) => {
     
   }
   useEffect(() => {
+    getDataForCategories();
     getSetting();
       getData();      
     }, []);
@@ -71,9 +162,13 @@ const HomeTab = (props) => {
                     <Spacing space={SH(30)} />
                     <View>
                     <TouchableOpacity>
-                      <Text style={HomeStyle.popularcourcetexttwoColor1}>
-                      HOŞGELDİNİZ
-                      </Text>
+                      {courceData && 
+                        <NestedListView
+                          data={courceData}
+                          getChildrenName={getChildrenName}
+                          renderNode={renderNode}
+                        />
+                      }
                       <RenderHtml
                     contentWidth={width}
                     source={content}
@@ -151,3 +246,46 @@ const HomeTab = (props) => {
 export default HomeTab;
 
 
+const styles = StyleSheet.create({
+  container3: { flex: 1, backgroundColor: 'rgb(255, 255, 255)', padding: 15 },
+  node: {
+    flex: 1,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: 'rgb(0, 0, 0)',
+  },
+  container: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: 5, // Adjust as needed for left padding
+  },
+  gradient: {
+    flex: 1,
+  },
+  roundedContainer: {
+    width: '100%', // Span the entire width of the screen
+    borderRadius: 50, // To make it a circle
+    overflow: 'hidden',
+    backgroundColor: 'lightgray',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  image: {
+    width: 60, // Set the width of the image
+    height: 60, // Set the height of the image
+    borderRadius: 25, // To make it a circle
+    resizeMode: 'cover',
+  },
+  textContainer: {
+    flex: 1,
+    marginLeft: 10,
+    marginRight:40,
+    justifyContent: 'center', // Center the text vertically
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+});

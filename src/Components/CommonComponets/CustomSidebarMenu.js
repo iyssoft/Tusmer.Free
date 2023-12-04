@@ -39,8 +39,20 @@ const CustomSidebarMenu = (props) => {
               />
               <Text style={Sidemenu.hometextstyle}>{t("Anasayfa")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Sidemenu.flexrowset} onPress={
-              () => Onpressfunction(RouteName.DELEGATE_SCREEN)
+            {!authCtx.IsHideMenuItem && <TouchableOpacity style={Sidemenu.flexrowset} onPress={
+              () => Onpressfunction(RouteName.DELEGATE_SCREEN,{type: 1})
+            }>
+              <VectorIcons
+                icon="FontAwesome5"
+                size={SF(19)}
+                name="phone"
+                color={Colors.theme_backgound}
+              />
+              <Text style={Sidemenu.hometextstyle}>{t("Aranmak İstermisiniz")}</Text>
+            </TouchableOpacity>
+}
+{!authCtx.IsHideMenuItem &&  <TouchableOpacity style={Sidemenu.flexrowset} onPress={
+              () => Onpressfunction(RouteName.DELEGATE_SCREEN,{type: 2})
             }>
               <VectorIcons
                 icon="FontAwesome5"
@@ -49,7 +61,7 @@ const CustomSidebarMenu = (props) => {
                 color={Colors.theme_backgound}
               />
               <Text style={Sidemenu.hometextstyle}>{t("Temsilcimiz Olmak İstermisiniz")}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
 {/* 
             <TouchableOpacity style={Sidemenu.flexrowset} onPress={
               () => Onpressfunction(RouteName.TOPIC_SCREEN,{topicSystemName:"temsilci_ol"})

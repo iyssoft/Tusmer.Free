@@ -82,7 +82,7 @@ export async function userRegister(credentials)
 export async function becomeDelegate(credentials)
 {
     console.log("userRegister");
-    let {name_surname, mobileNumber, message, university, studentClass}= credentials;
+    let {name_surname, mobileNumber, message, university, studentClass, type}= credentials;
         const response= await axios.post(
             Base_Url2+BecomeDelegate,
             {
@@ -90,7 +90,8 @@ export async function becomeDelegate(credentials)
                 "phone": mobileNumber,
                  "message":message,
                  "universityId": university,
-                 "schoolTermId": studentClass
+                 "schoolTermId": studentClass,
+                "type": type
             }
             );
     

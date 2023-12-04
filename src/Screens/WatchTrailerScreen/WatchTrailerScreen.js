@@ -8,6 +8,8 @@ import {  SF } from "../../Utiles";
 import { LessonsTab } from '../../Screens';
 import { RouteName } from "../../routes";
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { VideoModal } from "../../modals/VideoModal";
+
 
 const WatchTrailerScreen = (props) => {
   const { navigation,route } = props;
@@ -17,8 +19,28 @@ const WatchTrailerScreen = (props) => {
   const [videoUrl, setVideoUrl]= useState("");
   const [demoSeconds, setDemoSecconds]= useState(0);
   const [paused, setPaused]= useState(false);
+  const [visibleModal, setVisibleModal] = useState(false);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState(null);
+  const [currentVideoId, setCurrentVideoId] = useState(null);
+  const [current, setCurrent] = useState({});
+
+  async function changeScreenOrientation_LANDSCAPE_LEFT() {
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+  }
+  async function changeScreenOrientation_Default() {
+    await ScreenOrientation.unlockAsync();
+  }
+  const dismissModal = () => {
+    setVisibleModal(false);
+    changeScreenOrientation_Default();
+  }
 
   const changeVideoUrl=(link, demoSecond) =>{
+    setCurrentVideoUrl(link);
+    changeScreenOrientation_LANDSCAPE_LEFT();
+    setVisibleModal(true);
+
+    console.log(link);
     setVideoUrl(link);
     setDemoSecconds(demoSecond);
   }
@@ -71,8 +93,8 @@ const WatchTrailerScreen = (props) => {
       <ReactNativeParallaxHeader
         alwaysShowTitle={true}
         alwaysShowNavBar={true}
-        headerMaxHeight={340}
-        headerMinHeight={55}
+        headerMaxHeight={0}
+        headerMinHeight={0}
         extraScrollHeight={0}
         navbarColor="rgba(223,238,255,1)"
         titleStyle={WatchTrailerStyles.titleStyle}
@@ -90,6 +112,12 @@ const WatchTrailerScreen = (props) => {
           showsVerticalScrollIndicator: false
         }}
       />
+      <VideoModal
+          isVisible={visibleModal}
+          videoUrl={currentVideoUrl}
+          demoSeconds={demoSeconds}
+          onDismissModal={dismissModal}
+        />
     </>
   );
 }

@@ -17,7 +17,7 @@ const HomeCarouselSlider = (props) => {
     return (
       <View>
         <TouchableOpacity style={HomeStyle.rounftextview} >
-          <Image style={HomeStyle.imagsetstyle} resizeMode="stretch" source={{uri:item.imageUrl}} />
+          <Image style={HomeStyle.imagsetstyle} resizeMode="cover" source={{uri:item.imageUrl}} />
           {/* <Text
             style={HomeStyle.textContainer}
           >

@@ -6,7 +6,9 @@ export const AuthContext = createContext({
     iaAuthenticated: false,
     isVideoFullScreen: false,
     isRegistrationRequired: true,
+    IsHideMenuItem:true,
     setFullScreen: (isVideoFullScreen)=>{},
+    setIsHideMenuItem: (hideMenuItem)=>{},
     setRegistrationRequired:()=>{},
     authenticate: (token) =>{},
     authenticateApi: (token) =>{},
@@ -18,6 +20,7 @@ function AuthContextProvider({children}){
     const [apiToken, setApiToken] = useState();
     const [videoFullScreen, setVideoFullScreen] = useState();
     const [registration, setRegistration] = useState();
+    const [hideMenuItem, setHideMenuItem] = useState();
 
     function authenticate(token){
         setAuthToken(token);
@@ -27,6 +30,9 @@ function AuthContextProvider({children}){
     }
     function setFullScreen(token){
         setVideoFullScreen(token);
+    }
+    function setIsHideMenuItem(token){
+        setHideMenuItem(token);
     }
     function setRegistrationRequired(token){
         setRegistration(token);
@@ -41,10 +47,12 @@ function AuthContextProvider({children}){
         isAuthenticated: !!authToken,
         isVideoFullScreen:videoFullScreen,
         isRegistrationRequired: registration,
+        IsHideMenuItem: hideMenuItem,
         authenticate: authenticate,
         authenticateApi:authenticateApi,
         setFullScreen:setFullScreen,
         setRegistrationRequired:setRegistrationRequired,
+        setIsHideMenuItem:setIsHideMenuItem,
         logout:logout,
     };
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

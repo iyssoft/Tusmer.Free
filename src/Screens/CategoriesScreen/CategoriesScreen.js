@@ -6,6 +6,8 @@ import { Container, CategoriesView, AppHeader, Button, Spacing  } from '../../Co
 import { SH } from '../../Utiles';
 import { RouteName } from '../../routes';
 import { useTranslation } from "react-i18next";
+import { LinearGradient } from 'expo-linear-gradient';
+
 import images from '../../index';
 import { getCategories, getSubCategories } from "../../services/api";
 const dimensions = Dimensions.get('window');
@@ -21,10 +23,10 @@ const Base_Url2= "https://online.tusmer.com/api";
 const Categories="/lecture/gettusmerfreelecturegroups";
 const CategoriesScreen = (props) => {
   const { route, navigation } = props;
-  //const { id } = route.params;
+  const { courceData } = route.params;
   const { Colors } = useTheme();
   const { t } = useTranslation();
-  const[courceData, setCourceData]= useState(null);
+  // const[courceData, setCourceData]= useState(null);
   const CoursesStyles = useMemo(() => CoursesStyle(Colors), [Colors]);
   const CongratulationStyles = useMemo(() => CongratulationStyle(Colors), [Colors]);
 
@@ -72,39 +74,45 @@ const CategoriesScreen = (props) => {
       // }
     }
     const renderNode = (node, level, isLastLevel) => {
-      const paddingLeft = (level ?? 0 + 1) * 30;
-      let backgroundColor= '#B6FFFA';
-      let marker = "*   ";
-      if(level == 2){
-        backgroundColor= '#98E4FF';
-         marker = "o   ";
-      }
-      else if(level == 3){
-        backgroundColor= '#80B3FF';
-         marker = "-   ";
-      }
-      else if(level == 4){
-        backgroundColor= '#687EFF';
-      }
-      else if(level == 5){
-        backgroundColor= 'white';
-      }
+      const paddingLeft = (level-1) * 15;
       if(isLastLevel)
       {
-        console.log(node.value);
+        console.log("https://online.tusmer.com"+node.icon);
 
         return (
-          <View style={[styles.node, { backgroundColor: backgroundColor, paddingLeft }]}>
-            <TouchableOpacity onPress={() => navigation.navigate(RouteName.WATCH_TRAILER_SCREEN,{id:node.value,groupName:node.name})}>
-            <Text>{marker+ node.name}</Text>                   
+          <View>
+            <View style={[styles.container, { paddingLeft }]}>
+              <LinearGradient
+               colors={[node.color1, node.color2]}
+               start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
+                style={styles.roundedContainer}>
+                <Image source={{uri:"https://online.tusmer.com"+node.icon}}  style={styles.image} />
+                <TouchableOpacity onPress={() => navigation.navigate(RouteName.WATCH_TRAILER_SCREEN,{id:node.value,groupName:node.name})}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.text}>{node.name}</Text>
+                  </View>
                 </TouchableOpacity>
+                </LinearGradient>
+            </View>
+            <Spacing space={SH(4)} />
           </View>
         );
       }
       else{
         return (
-          <View style={[styles.node, { backgroundColor: backgroundColor, paddingLeft }]}>
-            <Text>{marker+ node.name}</Text>
+          <View>
+            <View style={[styles.container, { paddingLeft }]}>
+              <LinearGradient
+                colors={[node.color1, node.color2]}
+                start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
+                style={styles.roundedContainer}>
+                <Image source={{uri:"https://online.tusmer.com"+node.icon}}  style={styles.image} />
+                <View style={styles.textContainer}>
+                  <Text style={styles.text}>{node.name}</Text>
+                  </View>
+                </LinearGradient>
+            </View>
+            <Spacing space={SH(4)} />
           </View>
         );
       }
@@ -114,17 +122,18 @@ const CategoriesScreen = (props) => {
     const getChildrenName = (_) => {
       return 'items';
     };
-  
-    useEffect(() => {
-      if(authCtx.isAuthenticated || !authCtx.isRegistrationRequired){
-        getData();
-      }        
-        navigation.setOptions({ headerTitle: "" });
-      }, [authCtx.isAuthenticated,!authCtx.isRegistrationRequired, NestedListView]);
+    navigation.setOptions({ headerShown: true,headerBackTitle:"Geri",title:"" });
+    // useEffect(() => {
+    //   if(authCtx.isAuthenticated || !authCtx.isRegistrationRequired){
+    //     getData();
+    //   }        
+    //     navigation.setOptions({ headerTitle: "" });
+    //   }, [authCtx.isAuthenticated,!authCtx.isRegistrationRequired, NestedListView]);
       if(authCtx.isAuthenticated || !authCtx.isRegistrationRequired){
         if (courceData !== null) {
           return (
             <Container>
+                    <Spacing space={SH(20)} />
               <View style={CoursesStyles.minstyleviewphotograpgy}>
                 <ScrollView
                   keyboardShouldPersistTaps="handled"
@@ -132,35 +141,11 @@ const CategoriesScreen = (props) => {
                   <View style={CoursesStyles.keybordtopviewstyle}>
                     <KeyboardAvoidingView enabled>
                       <View style={CoursesStyles.minviewsigninscreen}>
-                      {/* <TreeView data={courceData} onClick={(data) => 
-                    navigation.navigate(RouteName.WATCH_TRAILER_SCREEN,{id:data.value,groupName:data.name})}/> */}
                     <NestedListView
                     data={courceData}
                     getChildrenName={getChildrenName}
                     renderNode={renderNode}
                   />
-                                {/* <NestedListView
-                      data={courceData}
-                      getChildrenName={(node) => 'items'}
-                      onNodePressed={(node) => alert('Selected node')}
-                      renderNode={(node, level, isLastLevel) => (
-                        <NestedRow
-                          level={level}
-                          style={styles.row}
-                        >
-                          <Text>{node.name}</Text>
-                        </NestedRow>
-                      )}
-                    /> */}
-                        {/* <FlatList
-                          data={courceData}
-                          showsHorizontalScrollIndicator={false}
-                          renderItem={({ item }) => (<CategoriesView
-                            item={item}
-                            onPress={() => navigation.navigate(RouteName.COURSES_SCREEN,{categoryId: item.id})}
-                          />)}
-                          keyExtractor={item => item.id}
-                        /> */}
                       </View>
                     </KeyboardAvoidingView>
                   </View>
@@ -219,12 +204,55 @@ const CategoriesScreen = (props) => {
 };
 
 export default CategoriesScreen;
+// const styles = StyleSheet.create({
+//   container: { flex: 1, backgroundColor: 'rgb(255, 255, 255)', padding: 15 },
+//   node: {
+//     flex: 1,
+//     padding: 10,
+//     borderWidth: 1,
+//     borderColor: 'rgb(0, 0, 0)',
+//   },
+// });
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'rgb(255, 255, 255)', padding: 15 },
+  container3: { flex: 1, backgroundColor: 'rgb(255, 255, 255)', padding: 15 },
   node: {
     flex: 1,
     padding: 10,
     borderWidth: 1,
     borderColor: 'rgb(0, 0, 0)',
+  },
+  container: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: 5, // Adjust as needed for left padding
+  },
+  gradient: {
+    flex: 1,
+  },
+  roundedContainer: {
+    width: '100%', // Span the entire width of the screen
+    borderRadius: 50, // To make it a circle
+    overflow: 'hidden',
+    backgroundColor: 'lightgray',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  image: {
+    width: 60, // Set the width of the image
+    height: 60, // Set the height of the image
+    borderRadius: 25, // To make it a circle
+    resizeMode: 'cover',
+  },
+  textContainer: {
+    flex: 1,
+    marginLeft: 10,
+    marginRight:50,
+    justifyContent: 'center', // Center the text vertically
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
   },
 });

@@ -30,19 +30,9 @@ export const TipSidebarMenuData = [
   export const HomePageTopSliderData = [
     {
         id:1,
-        imageUrl:"https://tusmer.com/wp-content/uploads/2022/12/111.fw_-e1675703330803.png",
+        imageUrl:"https://online.tusmer.com/images/mobile/APP1-01.png",
         topicId:"11",
-    },
-    {
-        id:2,
-        imageUrl:"https://tusmer.com/wp-content/uploads/2023/02/tusmer-ogrenciler.jpg",
-        topicId:"12",
-    },
-    {
-        id:3,
-        imageUrl:"https://tusmer.com/wp-content/uploads/2023/02/e-amfi-ogrenci.jpg",
-        topicId:"13",
-    },
+    }
     
   ];
   export const HomePageRoundedSliderData = [

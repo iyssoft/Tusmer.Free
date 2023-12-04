@@ -11,7 +11,8 @@ import { fetchUniversities, becomeDelegate } from "../../services/api";
 import { AutocompleteDropdownContextProvider, AutocompleteDropdown } from 'react-native-autocomplete-dropdown'
 const DelegateScreen = (props) => {
   const { t } = useTranslation();
-  const { navigation } = props;
+  const { route, navigation } = props;
+  const {type} = route.params;
   const { Colors } = useTheme();
   const Logins = useMemo(() => Login(Colors), [Colors]);
   const [alertVisible, setAlertVisible] = useState(false);
@@ -25,7 +26,8 @@ const DelegateScreen = (props) => {
     message: "",
     toggleCheckBox: false,
     university: 0,
-    studentClass: 0
+    studentClass: 0,
+    type:type
 };
 const StudentTermDropdownData2 = [
   { title: "Dönem 1", id: 1 },
@@ -139,7 +141,8 @@ StyleSheet.create({
                 <View style={Logins.Container}>
                     <View style={Style.MinViewContent}>
                         <View style={Logins.TopSpaceRegister}>
-                            <Text style={Logins.RegisterText}>{t("Ekibimize Katılın")}</Text>
+                          {type == 1 &&<Text style={Logins.RegisterText}>{t("Sizi Arayalım")}</Text>}  
+                          {type == 2 &&<Text style={Logins.RegisterText}>{t("Ekibimize Katılın")}</Text>}
                         </View>
                         <Input
                             title={t("Adınız Soyadınız *")}
@@ -211,6 +214,7 @@ StyleSheet.create({
                                 </>
                             </View>
                         <Spacing space={SH(30)} />
+                        {type == 2 && <View>
                             <Text style={TitleStyle.Label}>{t("İletiniz(tercihe bağlı)")}</Text>
                          <Input
                             inputStyle={ReviewsStyles.PositionStyleInput}
@@ -218,7 +222,10 @@ StyleSheet.create({
                             value={state.message}
                             numberOfLines={3}
                             placeholderTextColor={Colors.black_text_color}
-                            />                      
+                            />  
+                          </View>}
+
+                    
                         <Spacing space={SH(10)} />
                         <View style={Logins.FlexRowChekBox}>
                                 <View style={Logins.CheckBoxView}>
